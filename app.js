@@ -24,3 +24,26 @@ const db = mysql.createConnection({
       console.log('Connected to MySQL database');
     }
   });
+
+  const logger = winston.createLogger({
+    transports: [
+      new winston.transports.File({ filename: 'logs/app.log' }),
+      new winston.transports.Console(),
+    ],
+  });
+  
+  const validateUser = (user) => {
+    const schema = Joi.object({
+      name: Joi.string().min(3).required(),
+      email: Joi.string().email().required(),
+      age: Joi.number().min(18).required(),
+    });
+    return schema.validate(user);
+  };
+  
+
+  app.use((req, res, next) => {
+    logger.info(`${req.method} ${req.url}`);
+    next();
+  });
+  
