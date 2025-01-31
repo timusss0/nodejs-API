@@ -5,7 +5,29 @@ const Joi = require('joi');
 const winston = require('winston');
 const fs = require('fs');
 const app = express();
-const port = 3000;
+const swaggerUi = require('swagger-ui-express');
+const swaggerJSDoc = require('swagger-jsdoc');
+const port = process.env.PORT || 3000;
+
+const swaggerOptions = {
+  swaggerDefinition: {
+    info: {
+      title: 'User API',
+      description: 'API for managing users',
+      version: '1.0.0',
+    },
+    servers: [
+      {
+        url: 'http://localhost:3000',
+      },
+    ],
+  },
+  apis: ['./routes/*.js'], 
+};
+
+const swaggerSpec = swaggerJSDoc(swaggerOptions);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
@@ -124,3 +146,17 @@ const db = mysql.createConnection({
           }
         });
       });
+
+      
+      process.on('SIGINT', () => {
+        db.end(err => {
+          if (err) {
+            console.error('Error while closing MySQL connection', err);
+          } else {
+            console.log('MySQL connection closed');
+          }
+          process.exit();
+        });
+      });
+
+      module.exports = app;
