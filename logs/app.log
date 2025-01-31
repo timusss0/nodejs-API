@@ -12,3 +12,5 @@
 {"level":"info","message":"GET /users/9279103e-df85-11ef-9611-1cc10cbe0e5b"}
 {"level":"info","message":"PUT /users/9279103e-df85-11ef-9611-1cc10cbe0e5b"}
 {"level":"info","message":"PUT /users/9279103e-df85-11ef-9611-1cc10cbe0e5b"}
+{"level":"info","message":"DELETE /users/9279103e-df85-11ef-9611-1cc10cbe0e5b"}
+{"level":"info","message":"GET /users"}

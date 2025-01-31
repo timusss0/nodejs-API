@@ -110,3 +110,17 @@ const db = mysql.createConnection({
         });
       });
     
+
+      app.delete('/users/:id', (req, res) => {
+        const { id } = req.params;
+        db.query('DELETE FROM users WHERE id = ?', [id], (err, results) => {
+          if (err) {
+            logger.error(err);
+            res.status(500).send('Error deleting user');
+          } else if (results.affectedRows === 0) {
+            res.status(404).send('User not found');
+          } else {
+            res.send('User deleted');
+          }
+        });
+      });
