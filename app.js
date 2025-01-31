@@ -90,5 +90,23 @@ const db = mysql.createConnection({
           }
         });
       });
+
       
+      app.put('/users/:id', (req, res) => {
+        const { id } = req.params;
+        const { error } = validateUser(req.body);
+        if (error) return res.status(400).send(error.details[0].message);
+      
+        const { name, email, age } = req.body;
+        db.query('UPDATE users SET name = ?, email = ?, age = ? WHERE id = ?', [name, email, age, id], (err, results) => {
+          if (err) {
+            logger.error(err);
+            res.status(500).send('Error updating user');
+          } else if (results.affectedRows === 0) {
+            res.status(404).send('User not found');
+          } else {
+            res.send('User updated');
+          }
+        });
+      });
     
