@@ -51,7 +51,7 @@ const db = mysql.createConnection({
   });
   
   app.get('/users', (req, res) => {
-    conn.query('SELECT * FROM users', (err, results) => {
+    db.query('SELECT * FROM users', (err, results) => {
       if (err) {
         console.error(err);
         return res.status(500).send('Error fetching users');
@@ -77,4 +77,18 @@ const db = mysql.createConnection({
       });
     });
   
+    app.get('/users/:id', (req, res) => {
+        const { id } = req.params;
+        db.query('SELECT * FROM users WHERE id = ?', [id], (err, results) => {
+          if (err) {
+            logger.error(err);
+            res.status(500).send('Error fetching user');
+          } else if (results.length === 0) {
+            res.status(404).send('User not found');
+          } else {
+            res.json(results[0]);
+          }
+        });
+      });
+      
     
