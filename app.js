@@ -13,14 +13,14 @@ app.listen(port, () => {
 
 app.use(express.json());
 
-const conn = mysql.createConnection({
+const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '', 
     database: 'nodejs-api' 
   });
 
-  conn.connect((err) => {
+  db.connect((err) => {
     if (err) {
       console.error('Error connecting to the database:', err.stack);
       return;
@@ -39,7 +39,7 @@ const conn = mysql.createConnection({
     const schema = Joi.object({
       name: Joi.string().min(3).required(),
       email: Joi.string().email().required(),
-      age: Joi.number().min(18).required(),
+      age: Joi.number().integer().min(18).required()
     });
     return schema.validate(user);
   };
@@ -59,3 +59,22 @@ const conn = mysql.createConnection({
       res.json(results);
     });
   });
+
+  app.post('/users', (req, res) => {
+    console.log(req.body); 
+    const { error } = validateUser(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+  
+    const { name, email, age } = req.body;
+    const userId = uuidv4();
+  
+    db.query('INSERT INTO users (id, name, email, age) VALUES (?, ?, ?, ?)', [userId, name, email, age], (err, results) => {
+        if (err) {
+          console.error('Error inserting user:', err);
+          return res.status(500).send('Error adding user');
+        }
+        res.status(201).send(`User added with ID: ${userId}`);
+      });
+    });
+  
+    
