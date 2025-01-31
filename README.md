@@ -18,14 +18,14 @@ User Management API adalah sebuah aplikasi RESTful API untuk mengelola data peng
      ```bash
    npm install
 
-6.  **Konfigurasi Variabel Lingkungan**
+5.  **Konfigurasi Variabel Lingkungan**
    Salin file .env.example menjadi .env dan sesuaikan dengan pengaturan lokal Anda.
 
-7. **Menjalankan aplikasi secara lokal: **
+6. **Menjalankan aplikasi secara lokal:**
      ```bash
     npm start
  Aplikasi akan berjalan di http://localhost:3000.
 
-8. **Akses Dokumentasi API dengan Swagger UI:**
+7. **Akses Dokumentasi API dengan Swagger UI:**
     ```bash
     http://localhost:3000/api-docs
