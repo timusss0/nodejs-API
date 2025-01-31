@@ -7,22 +7,25 @@ const fs = require('fs');
 const app = express();
 const port = 3000;
 
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});
+
 app.use(express.json());
 
-
-const db = mysql.createConnection({
+const conn = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '',
-    database: 'nodejs-api',
+    password: '', 
+    database: 'nodejs-api' 
   });
 
-  db.connect((err) => {
+  conn.connect((err) => {
     if (err) {
-      console.error('Database connection failed:', err);
-    } else {
-      console.log('Connected to MySQL database');
+      console.error('Error connecting to the database:', err.stack);
+      return;
     }
+    console.log('Connected to MySQL database');
   });
 
   const logger = winston.createLogger({
@@ -47,3 +50,12 @@ const db = mysql.createConnection({
     next();
   });
   
+  app.get('/users', (req, res) => {
+    conn.query('SELECT * FROM users', (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Error fetching users');
+      }
+      res.json(results);
+    });
+  });
